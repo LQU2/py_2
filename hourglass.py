@@ -84,7 +84,7 @@ def runHourglassSimulation(allSand):
                 # sand is on the bottom, it won't move: continue
 
             # if nothing is under this sand, move it down:
-            noSandBelow = (sand[X], sand[Y] + 1) not in allSand
+                noSandBelow = (sand[X], sand[Y] + 1) not in allSand
             noWallBelow = (sand[X], sand[Y] + 1) not in HOURGLASS
             canFallDown = noSandBelow and noWallBelow
 
@@ -108,3 +108,79 @@ def runHourglassSimulation(allSand):
                 notOnLeftEdge = sand[X] > 0
                 canFallLeft = (noSandBelowLeft and noWallBelowLeft
                     and noWallLeft and notOnLeftEdge)
+                
+                # check if the sand can fall to the right:
+                belowRight = (sand[X] +1, sand[Y] + 1)
+                noSandBelowRight = belowRight not in allSand
+                nowWallBelowRight = belowRight not in HOURGLASS
+                right = (sand [X] + 1, sand[Y])
+                noWallRight = right not in HOURGLASS
+                notOnRightEdge = sand[X] < SCREEN_WIDTH - 1
+                canFallRight = (noSandBelowRight and nowWallBelowRight
+                    and noWallRight and notOnRightEdge)
+                
+                # set the falling direction:
+                fallingDirection = None
+                if canFallLeft and not canFallRight:
+                    fallingDirection = -1 #set the sand to fall left
+                elif not canFallLeft and canFallRight:
+                    # both are possible, so randomly set it:
+                    fallingDirection = random.choice((-1, 1))
+
+                # check if the sand can "far" fall two spaces to
+                # the left or right instead of just one space:
+                if random.random() * 100 <= WIDE_FALL_CHANCE:
+                    belowTwoLeft = (sand[X] - 2, sand[Y] + 1)
+                    noSandBelowTwoLeft = belowTwoLeft not in allSand
+                    noWallBelowTwoLeft = belowTwoLeft not in HOURGLASS
+                    notOnSecondToLeftEdge = sand[X] > 1
+                    canFallTwoLeft = (canFallLeft and noSandBelowTwoLeft
+                        and noWallBelowTwoLeft and notOnSecondToLeftEdge)
+                    
+                    belowTwoRight = (sand[X] +2, sand[Y] + 1)
+                    noSandBelowTwoRight = belowTwoRight not in allSand
+                    noWallBelowTwoRight = belowTwoRight not in HOURGLASS
+                    notOnSecondToRightEdge = sand[X] < SCREEN_WIDTH - 2
+                    canFallTwoRight = (canFallRight
+                        and noSandBelowTwoRight and noWallBelowTwoRight
+                        and notOnSecondToRightEdge)
+                    
+                    if canFallTwoLeft and not canFallTwoRight:
+                        fallDirection = -2
+                    elif not canFallTwoLeft and canFallTwoRight:
+                        fallingDirection = 2
+                    elif canFallTwoLeft and canFallTwoRight:
+                        fallingDirection = random.choice((-2, 2))
+
+                if fallingDirection == None:
+                    # this sand can't fall, so move on continue
+
+                # draw the sand in its new position:
+                    bext.goto(sand[X], sand[Y])
+                print(' ', end='') # erase old sand
+                bext.goto(sand[X] + fallingDirection, sand[Y] + 1)
+                sandMovedOnThisStep = True
+
+                # move the grain of sand to its new position:
+                allSand[i] = (sand[X] + fallingDirection, sand[Y] + 1)
+                sandMovedOnThisStep = True
+
+            sys.stdout.flush() # (required for bext-using programs)
+            time.sleep(PAUSE_LENGTH) # pause after this
+
+            # if no sand has moved on this step, reset the hourglass:
+            if not sandMovedOnThisStep:
+                time.sleep(2)
+                # erase all of the sand:
+                for sand in allSand:
+                    bext.goto(sand[X], sand[Y])
+                    print(' ', end='')
+                break # break out of the main simulation loop
+
+# if this program was run (instead of imported), run the game:
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit() #when ctrl-c is pressed, end the program
