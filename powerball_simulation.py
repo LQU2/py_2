@@ -21,15 +21,33 @@ times_won = {
     "P": 0,
     "0": 0,
 }
+
+
+def calc_win_amt(my_numbers, winning_numbers):
+    win_amt = 0
+    #accessing the white numbers for my ticket
+    white_matches = len(my_numbers["whites"].intersection(winning_numbers["whites"])) #for the set of my white numbers, i want to run an intersection with the white winning numbers. it'll return a set of the same values that are in both sets, but we want to see how many we matched. to get that number we wrap the entire thing into a length & get the length of the intersection
+    #how many white numbers we matched from our ticket to the winning numbers
+    power_match = my_numbers['red'] == winning_numbers['red'] #this conditional is going to return a true or false value. if they match, power_match will be true. if not, then power_match will be false
+
+    if white_matches == 5: #then we matched all 5 of those white balls
+        if power_match: #and we hit the powerball
+            win_amt =
+
+    return win_amt #putting parameters in place to make clear we'll solve the problem
+
 #we need to loop through the number of drawings we want to simulate and draw the winning numbers for each of those 
 for drawing in range(num_drawings):
     white_drawing = set(random.sample(white_possibles, k=5)) #k=5, we want a sample of 5 of those. the random.sample is going to reutrn a list, but let's make it a set
     red_drawing = random.choice(red_possibles) #using random.choice to get one value from these possibilities
 
-    winning_numbers = {
-        "whites": white_drawing,
-        "red": red_drawing,
-    }
+    winning_numbers = {"whites": white_drawing, "red": red_drawing} # winning numers from a single drawing
 
-    for ticket in range(tickets_per_drawing)
+    for ticket in range(tickets_per_drawing): #let's loop through the number of tickets we plan to buy for each drawing
         total_spent += 2
+        my_whites = set(random.sample(white_possibles, k=5))
+        my_red = random.choice(red_possibles)
+
+        my_numbers = {"whites": my_whites, "red": my_red}
+
+        # calc_win_amt
