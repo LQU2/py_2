@@ -52,4 +52,59 @@ for y in range(8):
 def main():
     bext.fg('yellow')
     bext.clear()
-    
+
+    # draw the quit message:
+    bext.goto(0, 0)
+    print('Ctrl-c to quit.', end='')
+
+    # display the walls of the hourglass:
+    for wall in HOURGLASS:
+        bext.goto(wall[X], wall[Y])
+        print(WALL, end='')
+
+        while True: # main program loop
+            allSand = list(TOP_SAND)
+
+            # draw the initial sand:
+            for sand in allSand:
+                bext.goto(sand[X], sand[Y])
+                print(SAND, end='')
+
+            runHourglassSimulation(allSand)
+
+
+def runHourglassSimulation(allSand):
+    """run the stand falling simulation until the sand stops moving"""
+    while True: #keep looping until sand has run out. while loop, it's going to keep looping until something in the program tells it to exit
+        random.shuffle(allSand) #random order of grain simulaton
+
+        sandMovedOnThisStep = False
+        for i, sand in enumerate(allSand): 
+            if sand[Y] == SCREEN_HEIGHT - 1: 
+                # sand is on the bottom, it won't move: continue
+
+            # if nothing is under this sand, move it down:
+            noSandBelow = (sand[X], sand[Y] + 1) not in allSand
+            noWallBelow = (sand[X], sand[Y] + 1) not in HOURGLASS
+            canFallDown = noSandBelow and noWallBelow
+
+            if canFallDown:
+                # draw the sand in its new position down one space:
+                bext.goto(sand[X], sand[Y])
+                print(' ', end='') # clear the old position
+                bext.goto(sand[X], sand[Y] + 1)
+                print(SAND, end='')
+
+                # set the sand in its new position down one space:
+                allSand[i] = (sand[X], sand[Y] +1)
+                sandMovedOnThisStep = True
+            else:
+                # check if the sand can fall to the left:
+                belowLeft = (sand[X] - 1, sand[Y] + 1)
+                noSandBelowLeft = belowLeft not in allSand
+                noWallBelowLeft = belowLeft not in HOURGLASS
+                left = (sand[X] - 1, sand[Y])
+                noWallLeft = left not in HOURGLASS
+                notOnLeftEdge = sand[X] > 0
+                canFallLeft = (noSandBelowLeft and noWallBelowLeft
+                    and noWallLeft and notOnLeftEdge)
