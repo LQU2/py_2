@@ -37,6 +37,31 @@ def calc_win_amt(my_numbers, winning_numbers):
         else:
             win_amt = 1_000_000
             times_won["5"] += 1
+    elif white_matches == 4:
+        if power_match:
+            win_amt = 50_000
+            times_won["4+P"] += 1
+        else: 
+            win_amt = 100
+            times_won["4"] += 1
+    elif white_matches == 3:
+        if power_match:
+            win_amt = 100
+            times_won["3+P"] += 1
+        else:
+            win_amt = 7
+            times_won["3"] += 1
+    elif white_matches == 2 and power_match: #we don't get anything for matching 2, we need 2 and the powerball to win
+        win_amt = 7
+        times_won["2+P"] += 1
+    elif white_matches == 1 and power_match:
+        win_amt = 4
+        times_won["1+P"] += 1
+    elif power_match:
+        win_amt = 4
+        times_won["P"] += 1
+    else:
+        times_won["0"] += 1
 
     return win_amt #putting parameters in place to make clear we'll solve the problem
 
