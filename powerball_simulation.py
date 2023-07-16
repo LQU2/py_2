@@ -1,9 +1,9 @@
-import random
+import random , json
 
 white_possibles =  list (range(1, 70))
 red_possibles =  list (range(1, 27))
 
-tickets_per_drawing = 1
+tickets_per_drawing = 100
 num_drawings = 1
 
 total_spent = 0
@@ -62,7 +62,7 @@ def calc_win_amt(my_numbers, winning_numbers):
         times_won["P"] += 1
     else:
         times_won["0"] += 1
-
+    #returned win amounts assigned for each possible outcome
     return win_amt #putting parameters in place to make clear we'll solve the problem
 
 #we need to loop through the number of drawings we want to simulate and draw the winning numbers for each of those 
@@ -79,4 +79,10 @@ for drawing in range(num_drawings):
 
         my_numbers = {"whites": my_whites, "red": my_red}
 
-        # calc_win_amt
+        win_amt = calc_win_amt(my_numbers, winning_numbers)
+        earnings += win_amt
+
+print(f'Spent: ${total_spent}')
+print(f'Earnings: ${earnings}')
+
+print(json.dumps(times_won, indent=2)) #json library turns dictionary into a string
