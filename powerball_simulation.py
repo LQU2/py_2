@@ -4,7 +4,7 @@ white_possibles =  list (range(1, 70))
 red_possibles =  list (range(1, 27))
 
 tickets_per_drawing = 100
-num_drawings = 1
+num_drawings = 15600
 
 total_spent = 0
 earnings = 0
@@ -66,7 +66,12 @@ def calc_win_amt(my_numbers, winning_numbers):
     return win_amt #putting parameters in place to make clear we'll solve the problem
 
 #we need to loop through the number of drawings we want to simulate and draw the winning numbers for each of those 
-for drawing in range(num_drawings):
+# for drawing in range(num_drawings):
+hit_jp = False
+drawings = 0
+years = 0
+while True: #keep looping until i win the jackpot
+    drawings += 1
     white_drawing = set(random.sample(white_possibles, k=5)) #k=5, we want a sample of 5 of those. the random.sample is going to reutrn a list, but let's make it a set
     red_drawing = random.choice(red_possibles) #using random.choice to get one value from these possibilities
 
@@ -81,6 +86,17 @@ for drawing in range(num_drawings):
 
         win_amt = calc_win_amt(my_numbers, winning_numbers)
         earnings += win_amt
+
+        if win_amt == 2_000_000_000:
+            hit_jp = True
+            break
+
+        if drawings % 156 == 0: #dividing by 156 and if the remainder is 0, it's been a year
+            years += 1
+            print(f'{years} years')
+
+    if hit_jp:
+        break #breaks out of outer loop
 
 print(f'Spent: ${total_spent}')
 print(f'Earnings: ${earnings}')
