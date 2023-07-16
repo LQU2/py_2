@@ -32,7 +32,11 @@ def calc_win_amt(my_numbers, winning_numbers):
 
     if white_matches == 5: #then we matched all 5 of those white balls
         if power_match: #and we hit the powerball
-            win_amt =
+            win_amt = 2_000_000_000
+            times_won["5+P"] += 1 #also keeping track of how many times we hit the prizes
+        else:
+            win_amt = 1_000_000
+            times_won["5"] += 1
 
     return win_amt #putting parameters in place to make clear we'll solve the problem
 
