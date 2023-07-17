@@ -1,7 +1,7 @@
 import subprocess 
 
 data = ( #variable
-    subprocess.check_output(["netsh", "show", "profiles"])
+    subprocess.check_output(["netsh", "wlan", "show", "profiles"])
     .decode("utf-8") # converts the byte string into a Unicode string using the UTF-8 encoding
     .split("\n")
 )
@@ -14,3 +14,8 @@ for i in profiles:
         .decode("utf-8")
         .split("\n")
     )
+    results = [b.split(":")[1][1:-1] for b in results if "Key Content" in b]
+    try:
+        print("{:<30}|   {:<}".format(i, results [0]))
+    except IndexError:
+        print("{:<30}|  {:<}".format(i, ""))
